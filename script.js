@@ -15,7 +15,7 @@ $(document).ready(function() {
     var prodmail= userDetails();
     var mail ="brian@brianfloyd.me";
 
-
+    
 
 
     //credentials for xapi_environment Watershed Essentials brian@bfloyd.me
@@ -112,7 +112,7 @@ function drawNewStoreCard(str){
 console.log($('.card.new_store').length)
    
     $('<div class="card new_store">').appendTo($('.cards'));
-    $('<input class="add" placeholder="Add New Store">').appendTo($('.new_store'));
+    $('<input class="add" placeholder="Add a New Store">').appendTo($('.new_store'));
     $('.add').attr('disabled','disabled');
     $(iconLib.plus).appendTo('.new_store');
     
