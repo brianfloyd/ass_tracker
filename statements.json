@@ -1,0 +1,57 @@
+
+
+    {
+        "actor": {
+         "name": "Brian Floyd",
+         "mbox": "mailto:brian@brianfloyd.me"
+        },
+        "verb": {
+         "id": "http://adlnet.gov/expapi/verbs/registered",
+         "display": {
+          "en-US": "registered"
+         }
+        },
+        "object": {
+         "objectType": "Activity",
+         "id": "http://xapi_environment/associates",
+         "definition": {
+          "name": {
+           "en-US": "Game Alpha"
+          }
+         }
+        },
+        "context": {
+         "contextActivities": {
+          "parent": [
+           {
+            "id": "http://xpai_playground/xpi",
+            "definition": {
+             "name": {
+              "en-US": "XAPI Playground!"
+             }
+            }
+           }
+          ]
+         },
+         "platform": "MacIntel",
+         "extensions": {
+          "http://wwww.brianfloyd.me/associates": {
+           "4920": {
+            "associate_1": {
+            "name":"Brian Floyd",
+            "dept":"24"
+           }
+        },
+            "4903": {
+                "associate_1": {
+                "name":"Brian Floyd",
+                "dept":"24"
+               }
+           }
+          
+         }
+        },
+        "language": "en-US"
+       }
+
+    }
