@@ -12,6 +12,7 @@ $(document).ready(function() {
     var lrs;
     var lastcss;
     var output = $('.output');
+    var cards =$('.cards');
     var $id = '22f611aa-b012-44db-bf38-3e5d7a97d574';
     var prodmail= userDetails();
     var mail ="brian@brianfloyd.me";
@@ -41,7 +42,11 @@ $(document).ready(function() {
         drawCards();
 
         
-        function drawCards(){
+        function drawCards(store){
+            var newStore = store;
+
+            
+          
             var thisguy = new TinCan.Agent({mbox:"mailto:"+mail});
             lrs.queryStatements({
 
@@ -63,17 +68,50 @@ $(document).ready(function() {
                     // TODO: additional page(s) of statements should be fetched
                 }
 
+               
+
 console.log(sr.statements[0]);
 if (typeof sr.statements[0] !='undefined')  {
 
-var storeNumbers=(Object.keys(sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"]));
 var store = sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"];
-var cardsToDraw =Object.keys(storeNumbers).length;
-var con = {"associate_1":{"name":"sara lee","dept":"41"}};
-store[4915]=con;
 
-console.log(store);
-    
+
+if (typeof newStore !='undefined'){
+    cards.empty();
+    store [newStore]={"associate_1" :{"name":"appended dude"}}
+    delete sr.statements[0].id;
+    sr.statements[0].id="51c7c013-46e0-4ed1-b01b-4294f99efd25"
+str=sr.statements[0];
+
+createStatement(str);
+    function createStatement(statement) {
+        lrs.saveStatement(
+            statement, {
+                callback: function (err, xhr) {
+                    if (err !== null) {
+                        if (xhr !== null) {
+                            console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+                            // TODO: do something with error, didn't save statement
+                            return;
+                        }
+
+                        console.log("Failed to save statement: " + err);
+                        // TODO: do something with error, didn't save statement
+                        return;
+                    }
+
+                    console.log("Statement saved");
+                 
+                    // TOOO: do something with success (possibly ignore)
+                }
+            }
+        );
+    }
+
+}
+
+var storeNumbers=(Object.keys(sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"]));
+var cardsToDraw =Object.keys(storeNumbers).length;  
 // var stores = (sr.statements[0].context.extensions["http://wwww.brianfloyd.me/asscoiates"].store)
 // var cardsToDraw =Object.keys(stores).length;
 // var storeNumbers = Object.keys(stores);
@@ -110,7 +148,7 @@ for (z=1;z<numAssoc+1;z++){
         );
     }
 function drawNewStoreCard(str){
-console.log($('.card.new_store').length);
+
    
     $('<div class="card new_store">').appendTo($('.cards'));
     $('<input class="add" placeholder="Add a New Store">').appendTo($('.new_store'));
@@ -135,8 +173,10 @@ console.log($('.card.new_store').length);
                 }
               }
               if(!match){
+  
                 $('.card.new_store').removeClass('new_store').addClass('card_'+store);
-                drawNewStoreCard();
+                drawCards(store);
+              
               }
             }
             
@@ -200,30 +240,7 @@ $('.add_ass , .minus_ass'). on ('click', function(){
   });    
         
     
-        function sendStatement(statement) {
-            lrs.saveStatement(
-                statement, {
-                    callback: function (err, xhr) {
-                        if (err !== null) {
-                            if (xhr !== null) {
-                                console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
-                                // TODO: do something with error, didn't save statement
-                                return;
-                            }
-
-                            console.log("Failed to save statement: " + err);
-                            // TODO: do something with error, didn't save statement
-                            return;
-                        }
-
-                        console.log("Statement saved");
-                        $('.info').fadeIn().css("color","white").fadeOut(5000).text("Statement Saved!");
-                        // TOOO: do something with success (possibly ignore)
-                    }
-                }
-            );
-        }
-
+       
 
 window.query = function query(){
    
