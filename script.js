@@ -167,7 +167,7 @@ function drawNewStoreCard(str){
                var match = false;
 
                 for(var val of str){
-                  if (isNaN(store) || store.length !=4  || store ===val){
+                  if (isNaN(store) || store.length >4 || store.length<3 || store ===val){
                       $('.add').val('').focus('');
                       match = true;
                 }
