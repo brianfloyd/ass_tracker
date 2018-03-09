@@ -130,12 +130,12 @@ button.menu-item{
 	border:none;
 	width:30vw;
 	display:block;
-	font-size:15px;
+	font-size: calc( 18px + ( 16 - 14) * ( ( 100vw - 300px) / ( 1400 - 300)));
 	padding-top:1%;
 	text-align:left;
 	font-weight:100;
 	padding-bottom:1%;
-	margin-right:1%;
+	margin-left:2%;
 	
 
 }

@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     var menuItems={
-        one:"<button class = 'menu-item'>Delete this store</button>",
+        one:"<button class = 'menu-item'>Delete This Store</button>",
         two:"<button class = 'menu-item'>Add Associate</button>", 
         three:"<button class = 'menu-item'>Remove Associate</button>"
   
