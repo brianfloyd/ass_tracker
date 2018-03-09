@@ -80,9 +80,9 @@ var store = sr.statements[0].context.extensions["http://wwww.brianfloyd.me/assoc
 
 if (typeof newStore !='undefined'){
     cards.empty();
-    store [newStore]={"associate_1" :{"name":"appended dude"}}
+    store [newStore]={"associate_1" :{"name":"appended dude"}};
     delete sr.statements[0].id;
-    sr.statements[0].id="51c7c013-46e0-4ed1-b01b-4294f99efd25"
+    sr.statements[0].id="51c7c013-46e0-4ed1-b01b-4294f99efd25";
 str=sr.statements[0];
 
 createStatement(str);
@@ -184,10 +184,6 @@ function drawNewStoreCard(str){
             }
             
         });
-
-
-        
-    
     });
     }
 
@@ -199,11 +195,16 @@ $('body').on("click","button",function(){
     
     var el=$(this);
     lastcss = el;
-    console.log(el);
+    var className = (el[0].classList[0]);
+console.log(el.text())
 
-    console.log($(this).hasClass());
     
-    el.css({"background":"red","color":"white"});
+    if (className === 'associate') {
+        el.css({"background":"red","color":"white"})}
+    else{
+        el.css({"color":"#efefef"})
+    }
+    
     
   });
 
@@ -211,7 +212,6 @@ $('body').on("click","button",function(){
 
 $('body').on ('click' , 'img.gear', function(){
 
-    console.log('wtf')
     var selector ='.'+ ($(this)[0].parentNode.classList[1]);
 
  
@@ -222,33 +222,38 @@ $('body').on ('click' , 'img.gear', function(){
     duration: 750
   });
 
- $(iconLib.closeArrow).appendTo(selector+' .menu');
+  var el = selector+' .menu';
+  console.log(el)
+
+ $(iconLib.closeArrow).appendTo(el);
  
  $('img.close-arrow').click(function(){
 
-    $(selector+' .menu').animate({
+    $(el).animate({
         height: "0%"
       }, {
         queue: false,
         duration: 750
       });
- })
-    if (selector ==='add_ass'){
+ });
 
-        var cardClass=$('.'+($(this).parents()[0].classList[1]));
+ var menuItems={
+     one:"<button class = 'menu-item'>Delete this store</button>",
+     two:"<button class = 'menu-item'>Add Associate</button>", 
+     three:"<button class = 'menu-item'>Remove Associate</button>",
+     four:"<button class = 'menu-item'>Edit Associate</button>"
+ };
 
-        $('<input class ="new_ass">').appendTo(cardClass).focus().keyup(function(e){
-            
-            if (e.which ===13){
+ var keys = (Object.keys(menuItems));
+ var iterate = (Object.keys(menuItems).length);
 
-                $('input.new_ass').blur();
-                
+ for (var val of keys){
 
-    }
+    $(menuItems[val]).appendTo(el);
 
-  } );
  }
-    });
+
+});
     
      
         
