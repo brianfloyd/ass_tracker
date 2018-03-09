@@ -7,7 +7,6 @@ $(document).ready(function() {
   
        
     };
-
     var menuText = (function(e){
         var keys = (Object.keys(menuItems));
         var iterate = (Object.keys(menuItems).length);
@@ -45,7 +44,7 @@ $(document).ready(function() {
 
     //credentials for xapi_environment Watershed Essentials brian@bfloyd.me
         var username = "0c946a10b516aa";
-         var password = "295e8897f95433";
+        var password = "295e8897f95433";
         var endpoint = "https://watershedlrs.com/api/organizations/3704/lrs/";
       
     //create lrs objeces
@@ -65,20 +64,39 @@ $(document).ready(function() {
        //pull last xAPI statement object for actor and create cards accordingly 
         drawCards();
 
+        
         function drawCards(store){
-            var newStore = store;
 
-            
-          
+            function createStatement(statement) {
+                lrs.saveStatement(
+                    statement, {
+                        callback: function (err, xhr) {
+                            if (err !== null) {
+                                if (xhr !== null) {
+                                    console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
+                                    // TODO: do something with error, didn't save statement
+                                    return;
+                                }
+        
+                                console.log("Failed to save statement: " + err);
+                                // TODO: do something with error, didn't save statement
+                                return;
+                            }
+        
+                            console.log("Statement saved");
+                         
+                            // TOOO: do something with success (possibly ignore)
+                        }
+                    }
+                );
+            }
+            var newStore = store;
             var thisguy = new TinCan.Agent({mbox:"mailto:"+mail});
             lrs.queryStatements({
-
-
                 params:{
                    agent:thisguy,
                     activity:"http://xapi_environment/associates",
-                    since: "2018-01-05T08:34:16Z"
-                
+                    since: "2018-01-05T08:34:16Z"  
             },
             callback: function (err, sr) {
                 if (err !== null) {
@@ -93,45 +111,19 @@ $(document).ready(function() {
 
                
 
-console.log(sr.statements[0]);
-if (typeof sr.statements[0] !='undefined')  {
-
-var store = sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"];
-
-
-if (typeof newStore !='undefined'){
-    cards.empty();
-    store [newStore]={"associate_1" :{"name":"appended dude"}};
-    delete sr.statements[0].id;
-    sr.statements[0].id="51c7c013-46e0-4ed1-b01b-4294f99efd25";
-    str=sr.statements[0];
-
-createStatement(str);
-    function createStatement(statement) {
-        lrs.saveStatement(
-            statement, {
-                callback: function (err, xhr) {
-                    if (err !== null) {
-                        if (xhr !== null) {
-                            console.log("Failed to save statement: " + xhr.responseText + " (" + xhr.status + ")");
-                            // TODO: do something with error, didn't save statement
-                            return;
-                        }
-
-                        console.log("Failed to save statement: " + err);
-                        // TODO: do something with error, didn't save statement
-                        return;
-                    }
-
-                    console.log("Statement saved");
-                 
-                    // TOOO: do something with success (possibly ignore)
-                }
-            }
-        );
-    }
-
+            console.log(sr.statements[0]);
+                if (typeof sr.statements[0] !='undefined')  {
+                         var store = sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"];
+                if (typeof newStore !='undefined'){
+                        cards.empty();
+                         store [newStore]={"associate_1" :{"name":"appended dude"}};
+                         delete sr.statements[0].id;
+                         sr.statements[0].id="51c7c013-46e0-4ed1-b01b-4294f99efd25";
+                         str=sr.statements[0];
+                            createStatement(str);
+    
 }
+
 
 var storeNumbers=(Object.keys(sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"]));
 var cardsToDraw =Object.keys(storeNumbers).length;  
