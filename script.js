@@ -3,8 +3,8 @@ $(document).ready(function() {
     var menuItems={
         one:"<button class = 'menu-item'>Delete this store</button>",
         two:"<button class = 'menu-item'>Add Associate</button>", 
-        three:"<button class = 'menu-item'>Remove Associate</button>",
-        four:"<button class = 'menu-item'>Edit Associate</button>",
+        three:"<button class = 'menu-item'>Remove Associate</button>"
+  
        
     };
 
@@ -190,7 +190,7 @@ function drawNewStoreCard(str){
 
                var match = false;
 
-                for(var val of str){
+                for(var val of store){
                   if (isNaN(store) || store.length >4 || store.length<3 || store ===val){
                       $('.add').val('').focus('');
                       match = true;
@@ -212,6 +212,10 @@ function drawNewStoreCard(str){
 $('body').on ('click' , 'img.gear', function(){
     var selector ='.'+ ($(this)[0].parentNode.classList[1]);
 
+    if ($('.menu').length>0){
+        var elClass = $('.menu')[0].parentElement.classList[1]
+        closeMenu($(elClass+ ' .menu'))}
+  
     $('.msg').remove();
     removeFlag = false;
     gearName = selector;
@@ -229,7 +233,7 @@ $('body').on ('click' , 'img.gear', function(){
  $('img.close-arrow').click(function(){
  closeMenu(el)});
  
- console.log(menuItems.one.split('>'))
+
 
  var keys = (Object.keys(menuItems));
  var iterate = (Object.keys(menuItems).length);
@@ -278,12 +282,14 @@ $('body').on("click","button",function(){
            card.remove();
            deleteStore(b[1]);
         }
+        break;
 
         case menuText.two:
 
         closeMenu();
         $('<input class ="new-associate grey" placeholder ="associate name">').appendTo(card).focus();
         addAssociate(card);
+        break;
 
 
         case menuText.three:
@@ -292,7 +298,7 @@ $('body').on("click","button",function(){
        
         var msg = "Choose associate to remove";
         removeFlag = true;
-        $('<div class ="msg">'+msg+'</div>').appendTo(card);
+       setTimeout(function(){ $('<div class ="msg">'+msg+'</div>').appendTo(card)},750)
 
 
 
@@ -388,15 +394,22 @@ window.query = function query(){
                     var newAss = $(this).val();
                     console.log(newAss)
 
-                    $('<input class ="add-associate-dept grey" placeholder ="dept">').appendTo(card).focus();
+                    $('<input class ="add-associate-dept grey" placeholder ="dept">').appendTo(card).focus().on('keyup', function(e){
+             
+                             if (e.which === 13){
+             
+                                 var newAssDept = $(this).val();
+                                 console.log(newAssDept);
+                                 $(this).remove();
+
+                             }
+
+                })
 
 
 
-                }
-
-
-
-            });
+            }
+           });
 
 
 
@@ -411,6 +424,7 @@ window.query = function query(){
                 el.remove(); 
                 console.log('remove',name);
                 removeFlag=false;
+                $('.msg').remove();
             
             }else{
                 el.css({"background":"white","color":"black"});
