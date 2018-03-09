@@ -100,7 +100,7 @@ $(document).ready(function () {
                             delete sr.statements[0].id;
                             sr.statements[0].id = "51c7c013-46e0-4ed1-b01b-4294f99efd25";
                             str = sr.statements[0];
-                            createStatement(str);
+                            sendStatement(str);
 
                         }
 
@@ -122,18 +122,12 @@ $(document).ready(function () {
                                     .appendTo($('.card_' + storeNumbers[a]));
                             }
                         }
-
                         drawNewStoreCard(storeNumbers);
                     } else {
                         drawNewStoreCard();
                     }
                 }
-
-
-
             }
-
-
         );
     }
 
@@ -235,11 +229,9 @@ $(document).ready(function () {
         switch (menuSelection) {
 
             case menuText.one:
-                var con = confirm("Are you sure you want to remove this store and all it's associates?");
-                    if (con) {
-                    card.remove();
+             
                     deleteStore(b[1]);
-                 }
+                 
                 break;
 
             case menuText.two:
@@ -305,9 +297,6 @@ $(document).ready(function () {
         });
     };
 
-
-
-
     function userDetails() {
         var user = window.location.search;
         var name = user.split('=');
@@ -319,8 +308,11 @@ $(document).ready(function () {
     }
 
     function deleteStore(storeNumber) {
-
+        var con = confirm("Are you sure you want to remove this store and all it's associates?");
+        if (con) {
+        card.remove();
         console.log('Delete ' + storeNumber);
+        }
     }
 
     function addAssociate(card) {
@@ -336,22 +328,13 @@ $(document).ready(function () {
                 $('<input class ="add-associate-dept grey" placeholder ="dept">').appendTo(card).focus().on('keyup', function (e) {
 
                     if (e.which === 13) {
-
                         var newAssDept = $(this).val();
                         console.log(newAssDept);
                         $(this).remove();
-
                     }
-
                 })
-
-
-
             }
         });
-
-
-
     }
 
     function deleteAssociate(el) {
@@ -391,7 +374,8 @@ $(document).ready(function () {
             duration: 750
         });
     }
-    function createStatement(statement) {
+
+    function sendStatement(statement) {
         lrs.saveStatement(
             statement, {
                 callback: function (err, xhr) {
