@@ -87,23 +87,39 @@ button.associate, input.new_ass{
 
 }
 
-img.add_ass, img.minus_ass{
+img.gear{
 
 	position:absolute;
+	bottom:5px;
+	right:5px;
+}
+
+.menu {
+
+	
+	background-color:rgb(54, 162, 250);
+	height:1vh;
+	width:30vw;
+	position:absolute;
 	bottom:0;
-	width:10%;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	overflow:hidden;
+	border-right:1px #fff solid;
+
+
 
 
 
 }
 
-img.add_ass{
-	left:40%;
-	
+.close-arrow{
+
+	width:20px;
+	height:20px;
+	z-index:10;
+	margin-left:1%;
 }
 
-img.minus_ass{
-	left:50%;
-	
-}
+
 
