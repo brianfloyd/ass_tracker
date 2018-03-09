@@ -75,7 +75,7 @@ img.plus{
 	transform:translate(-50%,-50%);
 }
 
-button.associate, input.new_ass{
+button.associate, input.new-associate,input.add-associate-dept{
 
 	background-color:none;
 	border:none;
@@ -139,5 +139,36 @@ button.menu-item{
 	
 
 }
+
+.card .msg{
+
+	position:absolute;
+	color:black;
+	text-align:middle;
+	bottom:1px;
+	font-weight:100;
+	font-size:16px;
+	left:23%;
+}
+
+input.grey::placeholder{
+
+	color:lightgray;
+	font-weight:100;
+}
+
+input.add-associate-dept{
+
+width:4vw;
+
+
+
+
+}
+input.new-associate{
+	display:inline-block !important;
+}
+
+
 
 
