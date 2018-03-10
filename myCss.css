@@ -169,6 +169,14 @@ input.new-associate{
 	display:inline-block !important;
 }
 
+select{
+
+	width:6vw;
+	height:4vh;
+	margin-left:2%;
+	font-size: calc( 14px + ( 16 - 14) * ( ( 100vw - 300px) / ( 1400 - 300)));
+
+}
 
 
 

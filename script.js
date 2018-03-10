@@ -32,6 +32,7 @@ $(document).ready(function () {
         "gear": '<img class ="gear" <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKLSURBVDhPpVRdb0xRFL2+ox58BEEQH00klY7O/RgNojwIEZ7oi3cJr/yA/gAhRHvPvSPVqL5oQjwgopjGtyitpO10zplJQ9LfMdY6d5tenWGEldzMrH32WWeftfe9TjN09OsNblj2+GQGJ1ZJ+N/hKXPXi8yQH+mn+L0k4b9EtboIG0+33tArJOL4ynzw4rFlblRuh+CAhJ19A7NrPKWPCW0AiGHDdQg8QuLbnNJtniqf9CPzkcsUxfqUp0o5xA/6Sn9G9aNupC/a/QvhhvoUNj+z/1mN0s/Br/lhaZdNAIKo7FsLlLmfy+utbcOTy71I61x+ZqekzKOrp7AUAq+CfKlDQk2BQ8/SX6H18MPiHnhYEGrRPVxdEuTNXlxtt4RqgGCJXgqtBxuCK1wRaq9um4JmIH4Pvr10o+nNsswJGPHiynahCTJheSOSB2k+nvc//WBlNpby0I91F3IfCMWB5igO+4JK3+HgkLahe5VDFGQXJc+C10QFt4XWQJ/TY0V0Xv2+EqKfoLU6EVT6ie1sSpSe8ZpCa6AFrF4o9s+1sPuIF0VwrgWlX4Z/d1D+TLavkrGZyZC/QJVHLAcCZc7j8FgoDz2HPROM4fAL3CNLCTiwSOgX6gS9s5voGYTfsDJcN0q/z4x78cx6ofUIotJhJD0UWgMH2Bq+AKh+fL8q7hD6K9rDb2v5OmVvFrdIqCmS19CMpj2twQ3NcVRXYDV+qM/QT/DHtEFS4LfpttdEZX5sDnTemlyHvKlGQ2/BFx2eaSQNsWPZXtMKgTGuJaNhxvl99PvMNvwfgafTQWRO2M2/Q3qQCVZEseTDMN9hp6e6uOFHoRnYWXj7GsJf7Wj8L9hdNoyPhP4Ax/kBIBpzFvOnrY4AAAAASUVORK5CYII=">',
         "closeArrow": '<img class ="close-arrow"src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADiSURBVDhP7c4xD8FAFMDxQxgsdp9EfAGDxSJGk9Ug8QFIjCar2ULiExhZfI4uvevdexJzvau7pJXTqrL1nzTte7n+cqzst3F1GwQAPTNmJiSOBWLHjMkIGgnAE1dw9hH7Zv02gqYC4CgUXgPErlk/I2yoMc/zmlLKVhaqMQ64D8Owzvm9rdHETTnAmitcmZGloTGsoWd612g++EpNogM6WlYI3RK6MCsn6sLodjv6bx4diJeF5sJsKeglN2ZzoRqip2q+P8dsLlT3FWZ7RQththi6LIzZIlThJlA4M6uyv8bYA42SOFi0tg6OAAAAAElFTkSuQmCC">'
     };
+    var deptOptions=["Dept","24","25","28","42"];
     var lrs;
     var lastcss;
     var output = $('.output');
@@ -226,8 +227,7 @@ $(document).ready(function () {
                     
                            
                         
-                        console.log(st);
-                        console.log(prepStmt);
+                       
                        
                     }
 
@@ -455,26 +455,66 @@ $(document).ready(function () {
 
             if (e.which === 13) {
 
-                var newAss = $(this).val();
             
-                $('<input class ="add-associate-dept grey" placeholder ="dept">').appendTo(card).focus().on('keyup', function (e) {
 
-                    if (e.which === 13) {
-                        var newAssDept = $(this).val();
+
+
+
+                var newAss = $(this).val();
+                var a = newAss.split(' ');
+            
+
+                if (newAss.length >20){
+                    $(this).val('');
+                    $(this).attr('placeholder','Please enter a name less than 20 chars');
+
+                }
+               
+                if(!/^[a-zA-Z]+$/.test(newAss)){
+                    $(this).val('');
+                    $(this).attr('placeholder','Only alpha chars accepted, try again');
+                    
+                }
+
+                if (a !=2){
+                    $(this).val('');
+                    $(this).attr('placeholder','You aint Prince, first and last name please');
+                    
+
+
+                }
+             
+                else{
+                
+            
+                $('<select class ="add-associate-dept grey" >').appendTo(card)
+                    $.each(deptOptions, function(key, value) {
+        
+                        $("select")
+                        .append(
+                          $("<option></optiom>")
+                            .attr("value", key)
+                            .text(value)
+                        );
+                      });
+                
+                    $('select').on ('change',function(){
+                        var newAssDept = $('select option:selected').text();
                    
-                        $(this).remove();
+                        
                         var data = {
                             "name" : newAss,
                             "dept":newAssDept
                         }
                     
-                    
-                        drawCards(store, "addAssociate" , data)
+                    $('select').remove()
+                       drawCards(store, "addAssociate" , data)
 
-                    }
+                    })
                 
-                });
+                
             }
+        }
         });
     }
 
@@ -490,9 +530,9 @@ $(document).ready(function () {
         var con = confirm('Please confirm that you would like to remove ' + data + ' from the list');
 
         if (con) {
-            console.log(store);
+      
             drawCards(store,'deleteAssociate',data)
-            console.log('remove', name);
+        
             removeFlag = false;
            
 
@@ -548,70 +588,3 @@ $(document).ready(function () {
 
 
 });
-
-
-
-
-
-
-
-
-
-// function queryStmt(){
-//     //query by activity and then set parmas
-//     var agentOrange =  new TinCan.Agent({mbox:"brian@brianfloyd.me"})
-
-//         lrs.queryStatements(
-//             {
-
-
-//                 params: {
-
-//                     agent:agentOrange,
-//                     verb:"http://adlnet.gov/expapi/verbs/registered",
-//                     activity:"http://xapi_environment/associates",
-//                     since: "2016-01-05T08:34:16Z"
-
-
-//                 },
-//                 callback: function (err, sr) {
-//                     if (err !== null) {
-//                         console.log("Failed to query statements: " + err);
-//                         // TODO: do something with error, didn't get statements
-//                         return;
-//                     }
-
-//                     if (sr.more !== null) {
-//                         // TODO: additional page(s) of statements should be fetched
-//                     }
-
-
-//       for (i=0;i<sr.statements.length;i++){
-
-//         var ns = sr.statements[i].context.extensions["http://wwww.brianfloyd.me/asscoiates"].store;
-//         for (var val of Object.keys(ns)){
-//             console.log(val);
-
-//         var n = sr.statements[i].context.extensions["http://wwww.brianfloyd.me/asscoiates"].store[val].length
-//         for (a =0;a<n;a++){
-
-//          console.log(sr.statements[i].context.extensions["http://wwww.brianfloyd.me/asscoiates"].store[val][a]);}
-//         }}
-
-//         $('.input-text').on('keyup',function(e){
-
-//             if(e.which ===13){
-//               var addon =  $(this).val();
-//               console.log(addon)
-//               var starter =st[addon]
-
-//               console.log(starter);
-//               console.log(Object.keys(st))
-//             }
-
-
-//         })
-
-
-//             }
-//         });
