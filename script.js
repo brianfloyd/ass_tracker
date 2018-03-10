@@ -2,7 +2,7 @@ $(document).ready(function () {
 
 
 
-   
+
     var menuItems = {
         one: "<button class = 'menu-item'>Delete This Store</button>",
         two: "<button class = 'menu-item'>Add Associate</button>",
@@ -32,7 +32,7 @@ $(document).ready(function () {
         "gear": '<img class ="gear" <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKLSURBVDhPpVRdb0xRFL2+ox58BEEQH00klY7O/RgNojwIEZ7oi3cJr/yA/gAhRHvPvSPVqL5oQjwgopjGtyitpO10zplJQ9LfMdY6d5tenWGEldzMrH32WWeftfe9TjN09OsNblj2+GQGJ1ZJ+N/hKXPXi8yQH+mn+L0k4b9EtboIG0+33tArJOL4ynzw4rFlblRuh+CAhJ19A7NrPKWPCW0AiGHDdQg8QuLbnNJtniqf9CPzkcsUxfqUp0o5xA/6Sn9G9aNupC/a/QvhhvoUNj+z/1mN0s/Br/lhaZdNAIKo7FsLlLmfy+utbcOTy71I61x+ZqekzKOrp7AUAq+CfKlDQk2BQ8/SX6H18MPiHnhYEGrRPVxdEuTNXlxtt4RqgGCJXgqtBxuCK1wRaq9um4JmIH4Pvr10o+nNsswJGPHiynahCTJheSOSB2k+nvc//WBlNpby0I91F3IfCMWB5igO+4JK3+HgkLahe5VDFGQXJc+C10QFt4XWQJ/TY0V0Xv2+EqKfoLU6EVT6ie1sSpSe8ZpCa6AFrF4o9s+1sPuIF0VwrgWlX4Z/d1D+TLavkrGZyZC/QJVHLAcCZc7j8FgoDz2HPROM4fAL3CNLCTiwSOgX6gS9s5voGYTfsDJcN0q/z4x78cx6ofUIotJhJD0UWgMH2Bq+AKh+fL8q7hD6K9rDb2v5OmVvFrdIqCmS19CMpj2twQ3NcVRXYDV+qM/QT/DHtEFS4LfpttdEZX5sDnTemlyHvKlGQ2/BFx2eaSQNsWPZXtMKgTGuJaNhxvl99PvMNvwfgafTQWRO2M2/Q3qQCVZEseTDMN9hp6e6uOFHoRnYWXj7GsJf7Wj8L9hdNoyPhP4Ax/kBIBpzFvOnrY4AAAAASUVORK5CYII=">',
         "closeArrow": '<img class ="close-arrow"src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADiSURBVDhP7c4xD8FAFMDxQxgsdp9EfAGDxSJGk9Ug8QFIjCar2ULiExhZfI4uvevdexJzvau7pJXTqrL1nzTte7n+cqzst3F1GwQAPTNmJiSOBWLHjMkIGgnAE1dw9hH7Zv02gqYC4CgUXgPErlk/I2yoMc/zmlLKVhaqMQ64D8Owzvm9rdHETTnAmitcmZGloTGsoWd612g++EpNogM6WlYI3RK6MCsn6sLodjv6bx4diJeF5sJsKeglN2ZzoRqip2q+P8dsLlT3FWZ7RQththi6LIzZIlThJlA4M6uyv8bYA42SOFi0tg6OAAAAAElFTkSuQmCC">'
     };
-    var deptOptions=["Dept","24","25","28","42"];
+    var deptOptions = ["Dept", "24", "25", "28", "42"];
     var lrs;
     var lastcss;
     var output = $('.output');
@@ -69,192 +69,191 @@ $(document).ready(function () {
     drawCards();
 
 
-    function drawCards(store,fn,data) {
+    function drawCards(store, fn, data) {
 
         var thisguy = new TinCan.Agent({
             mbox: "mailto:" + mail
         });
         lrs.queryStatements({
-                params: {
-                    agent: thisguy,
-                    activity:"http://ipk.behr.com/web/associates",
-                    since: "2018-01-05T08:34:16Z"
-                },
-                callback: function (err, sr) {
-                    if (err !== null) {
-                        console.log("Failed to query statements: " + err);
-                        // TODO: do something with error, didn't get statements
-                        return;
-                    }
-
-                    if (sr.more !== null) {
-                        // TODO: additional page(s) of statements should be fetched
-                    }
-                    
-                    var st=sr.statements[0];
-                    var uriExt =  "http://ipk.behr.com/associates";
-                                 
-                    var ext=st.context.extensions[uriExt];
-                    var prepStmt= new TinCan.Statement( {
-                        "actor": {
-                         "name": st.actor.name,
-                         "mbox": st.actor.mbox
-                        },
-                       "verb": {
-                         "id": "http://activitystrea.ms/schema/1.0/update",
-                         "display": {
-                          "en-US": "updated" 
-                         }
-                        },
-                        "object": {
-                         "objectType": "Activity",
-                         "id": "http://ipk.behr.com/web/associates",
-                         "definition": {
-                          "name": {
-                           "en-US": "Associate Registration"
-                          }
-                         }
-                        },
-                        "context": {
-                         "contextActivities": {
-                          "parent": [
-                           {
-                            "id": "http://ipk.behr.com/web",
-                            "definition": {
-                             "name": {
-                              "en-US": "iPK Web Environment"
-                             }
-                            }
-                           }
-                          ]
-                         },
-                         "platform": navigator.platform,
-                         "extensions": {
-                          "http://ipk.behr.com/associates": ext
-                         },
-                         "language": "en-US"
-                        }
-                    });
-                       
-
-                
-                
-                    if (typeof st != 'undefined') {
-                     
-                        if (typeof store != 'undefined') {
-                            cards.empty();
-                        }
-                        if (fn ==='addStore'){
-
-
-                       //prepStmt.context.extensions[uriExt][store]={};
-                     
-                        prepStmt.context.extensions[uriExt][store]={}
-                        updateStatement(prepStmt);
-                          
-                          
-                        }
-
-                        if (fn ==='deleteStore'){
-
-                            delete  prepStmt.context.extensions[uriExt][store];
-                            updateStatement(prepStmt);
-
-                        }
-                        if (fn ==="addAssociate"){
-
-                            
-                            var i = function(){
-                               var ret = st.context.extensions[uriExt][store];
-                    
-                               return Object.keys(ret).length+1
-                            }
-                          
-                            var assoc ="associate_"+i();
-                          
-            
-                            prepStmt.context.extensions[uriExt][store][assoc]=data;
-                            updateStatement(prepStmt);
-                                                 }
-
-                    if (fn ==='deleteAssociate'){
-
-                       var values = Object.values(st.context.extensions[uriExt][store]);
-                       var iterate = Object.keys(st.context.extensions[uriExt][store]).length;
-
-                       for (var m =0;m<iterate;m++){
-
-                    
-                        if (values[m].name===data){
-
-                            m++;
-
-                            delete st.context.extensions[uriExt][store]['associate_'+m]
-
-                            values = Object.values(st.context.extensions[uriExt][store]);
-                            iterate = Object.keys(st.context.extensions[uriExt][store]).length;
-                            var update = {}
-                            for (m =0;m<iterate;m++){
-
-                                values[m];
-                                updateAss = 'associate_'+(m+1);
-
-                               
-                                update[updateAss]=values[m];
-                                
-
-
-
-
-                            }
-                             prepStmt.context.extensions[uriExt][store]=update;
-                            
-                             updateStatement(prepStmt);
-                        }
-
-
-
-
-
-                       }
-
-
-                    }
-                      
-                        
-
-
-                    
-                           
-                        
-                       
-                       
-                    }
-
-
-                        var storeNumbers = (Object.keys(st.context.extensions[uriExt]));
-                        var cardsToDraw = Object.keys(storeNumbers).length;
-
-                        //create cards with store number header based on json 
-                        for (i = 0; i < cardsToDraw; i++) {
-                            $('<div class="card ' + 'card_' + storeNumbers[i] + '"' + '>').appendTo(cards);
-                            $('<div class="store">' + storeNumbers[i] + '</div>').appendTo($('.card_' + storeNumbers[i]));
-                            $(iconLib.gear).appendTo($('.card_' + storeNumbers[i]));
-                        }
-                        //create the associates that belong to store number header
-                        for (a = 0; a < storeNumbers.length; a++) {
-                            var numAssoc = (Object.keys(ext[storeNumbers[a]]).length);
-                            for (var z = 1; z < numAssoc + 1; z++) {
-
-                                
-                                $('<button class="associate">' + ext[storeNumbers[a]]['associate_' + z].name + '</div>')
-                                    .appendTo($('.card_' + storeNumbers[a]));
-                            }
-                        }
-                        drawNewStoreCard(storeNumbers);
-                    
+            params: {
+                agent: thisguy,
+                activity: "http://ipk.behr.com/web/associates",
+                since: "2018-01-05T08:34:16Z"
+            },
+            callback: function (err, sr) {
+                if (err !== null) {
+                    console.log("Failed to query statements: " + err);
+                    // TODO: do something with error, didn't get statements
+                    return;
                 }
-            })
+
+                if (sr.more !== null) {
+                    // TODO: additional page(s) of statements should be fetched
+                }
+
+                var st = sr.statements[0];
+                var uriExt = "http://ipk.behr.com/associates";
+
+                var ext = st.context.extensions[uriExt];
+                var prepStmt = new TinCan.Statement({
+                    "actor": {
+                        "name": st.actor.name,
+                        "mbox": st.actor.mbox
+                    },
+                    "verb": {
+                        "id": "http://activitystrea.ms/schema/1.0/update",
+                        "display": {
+                            "en-US": "updated"
+                        }
+                    },
+                    "object": {
+                        "objectType": "Activity",
+                        "id": "http://ipk.behr.com/web/associates",
+                        "definition": {
+                            "name": {
+                                "en-US": "Associate Registration"
+                            }
+                        }
+                    },
+                    "context": {
+                        "contextActivities": {
+                            "parent": [{
+                                "id": "http://ipk.behr.com/web",
+                                "definition": {
+                                    "name": {
+                                        "en-US": "iPK Web Environment"
+                                    }
+                                }
+                            }]
+                        },
+                        "platform": navigator.platform,
+                        "extensions": {
+                            "http://ipk.behr.com/associates": ext
+                        },
+                        "language": "en-US"
+                    }
+                });
+
+
+
+
+                if (typeof st != 'undefined') {
+
+                    if (typeof store != 'undefined') {
+                        cards.empty();
+                    }
+                    if (fn === 'addStore') {
+
+
+                        //prepStmt.context.extensions[uriExt][store]={};
+
+                        prepStmt.context.extensions[uriExt][store] = {}
+                        updateStatement(prepStmt);
+
+
+                    }
+
+                    if (fn === 'deleteStore') {
+                        a
+
+                        delete prepStmt.context.extensions[uriExt][store];
+                        updateStatement(prepStmt);
+
+                    }
+                    if (fn === "addAssociate") {
+
+
+                        var i = function () {
+                            var ret = st.context.extensions[uriExt][store];
+
+                            return Object.keys(ret).length + 1
+                        }
+
+                        var assoc = "associate_" + i();
+
+
+                        prepStmt.context.extensions[uriExt][store][assoc] = data;
+                        updateStatement(prepStmt);
+                    }
+
+                    if (fn === 'deleteAssociate') {
+
+                        var values = Object.values(st.context.extensions[uriExt][store]);
+                        var iterate = Object.keys(st.context.extensions[uriExt][store]).length;
+
+                        for (var m = 0; m < iterate; m++) {
+
+
+                            if (values[m].name === data) {
+
+                                m++;
+
+                                delete st.context.extensions[uriExt][store]['associate_' + m]
+
+                                values = Object.values(st.context.extensions[uriExt][store]);
+                                iterate = Object.keys(st.context.extensions[uriExt][store]).length;
+                                var update = {}
+                                for (m = 0; m < iterate; m++) {
+
+                                    values[m];
+                                    updateAss = 'associate_' + (m + 1);
+
+
+                                    update[updateAss] = values[m];
+
+
+
+
+
+                                }
+                                prepStmt.context.extensions[uriExt][store] = update;
+
+                                updateStatement(prepStmt);
+                            }
+
+
+
+
+
+                        }
+
+
+                    }
+
+
+
+
+
+
+
+
+
+                }
+
+
+                var storeNumbers = (Object.keys(st.context.extensions[uriExt]));
+                var cardsToDraw = Object.keys(storeNumbers).length;
+
+                //create cards with store number header based on json 
+                for (i = 0; i < cardsToDraw; i++) {
+                    $('<div class="card ' + 'card_' + storeNumbers[i] + '"' + '>').appendTo(cards);
+                    $('<div class="store">' + storeNumbers[i] + '</div>').appendTo($('.card_' + storeNumbers[i]));
+                    $(iconLib.gear).appendTo($('.card_' + storeNumbers[i]));
+                }
+                //create the associates that belong to store number header
+                for (a = 0; a < storeNumbers.length; a++) {
+                    var numAssoc = (Object.keys(ext[storeNumbers[a]]).length);
+                    for (var z = 1; z < numAssoc + 1; z++) {
+
+
+                        $('<button class="associate">' + ext[storeNumbers[a]]['associate_' + z].name + '</div>')
+                            .appendTo($('.card_' + storeNumbers[a]));
+                    }
+                }
+                drawNewStoreCard(storeNumbers);
+
+            }
+        })
     }
 
     function drawNewStoreCard(str) {
@@ -281,8 +280,8 @@ $(document).ready(function () {
                     if (!match) {
 
                         $('.card.new_store').removeClass('new_store').addClass('card_' + store);
-                      
-                        drawCards(store,'addStore');
+
+                        drawCards(store, 'addStore');
 
                     }
                 }
@@ -355,9 +354,9 @@ $(document).ready(function () {
         switch (menuSelection) {
 
             case menuText.one:
-             
-                    deleteStore(card,b[1]);
-                 
+
+                deleteStore(card, b[1]);
+
                 break;
 
             case menuText.two:
@@ -437,84 +436,82 @@ $(document).ready(function () {
 
         var con = confirm("Are you sure you want to remove this store and all it's associates?");
         if (con) {
-      drawCards(storeNumber,'deleteStore');
-        console.log('Delete ' + storeNumber);
+            drawCards(storeNumber, 'deleteStore');
+            console.log('Delete ' + storeNumber);
         }
     }
 
     function addAssociate(card) {
 
-       var a =(card[0].classList[1]);
-     
-       var b =a.split('_');
-       var store = b[1];
-     
+        var a = (card[0].classList[1]);
+
+        var b = a.split('_');
+        var store = b[1];
+
         var input = $('input.new-associate');
 
         input.on('keyup', function (e) {
 
             if (e.which === 13) {
 
-            
+
 
 
 
 
                 var newAss = $(this).val();
                 var a = newAss.split(' ');
-            
 
-                if (newAss.length >20){
+
+                if (newAss.length > 20) {
                     $(this).val('');
-                    $(this).attr('placeholder','Please enter a name less than 20 chars');
+                    $(this).attr('placeholder', 'Please enter a name less than 20 chars');
 
                 }
-               
-                if(!/^[a-zA-Z]+$/.test(newAss)){
+
+                if (!/^[a-zA-Z]+$/.test(newAss)) {
                     $(this).val('');
-                    $(this).attr('placeholder','Only alpha chars accepted, try again');
-                    
+                    $(this).attr('placeholder', 'Only alpha chars accepted, try again');
+
                 }
 
-                if (a !=2){
+                if (a != 2) {
                     $(this).val('');
-                    $(this).attr('placeholder','You aint Prince, first and last name please');
-                    
+                    $(this).attr('placeholder', 'You aint Prince, first and last name please');
 
 
-                }
-             
-                else{
-                
-            
-                $('<select class ="add-associate-dept grey" >').appendTo(card)
-                    $.each(deptOptions, function(key, value) {
-        
+
+                } else {
+
+
+                    $('<select class ="add-associate-dept grey" >').appendTo(card)
+                    $.each(deptOptions, function (key, value) {
+
                         $("select")
-                        .append(
-                          $("<option></optiom>")
-                            .attr("value", key)
-                            .text(value)
-                        );
-                      });
-                
-                    $('select').on ('change',function(){
+                            .append(
+                                $("<option></optiom>")
+                                .attr("value", key)
+                                .text(value)
+                            );
+                    });
+
+                    $('select').on('change', function () {
                         var newAssDept = $('select option:selected').text();
-                   
-                        
+
+
                         var data = {
-                            "name" : newAss,
-                            "dept":newAssDept
+                            "name": newAss,
+                            "dept": newAssDept
                         }
-                    
-                    $('select').remove()
-                       drawCards(store, "addAssociate" , data)
+
+                        $('select').remove()
+                        drawCards(store, "addAssociate", data)
 
                     })
-                
-                
+
+
+                }
             }
-        }
         });
     }
 
@@ -524,17 +521,17 @@ $(document).ready(function () {
             "color": "white"
         });
         var data = el.text();
-        var a =el[0].parentElement.classList[1];
-        var b =a.split('_');
+        var a = el[0].parentElement.classList[1];
+        var b = a.split('_');
         var store = b[1];
         var con = confirm('Please confirm that you would like to remove ' + data + ' from the list');
 
         if (con) {
-      
-            drawCards(store,'deleteAssociate',data)
-        
+
+            drawCards(store, 'deleteAssociate', data)
+
             removeFlag = false;
-           
+
 
         } else {
             el.css({
