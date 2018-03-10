@@ -1,5 +1,8 @@
 $(document).ready(function () {
 
+
+
+   
     var menuItems = {
         one: "<button class = 'menu-item'>Delete This Store</button>",
         two: "<button class = 'menu-item'>Add Associate</button>",
@@ -16,10 +19,10 @@ $(document).ready(function () {
             var a = menuItems[keys[i]];
             var b = a.split('>');
             var c = b[1].split('<');
-            var partB = c[0]
-            ret[partA] = partB
+            var partB = c[0];
+            ret[partA] = partB;
         }
-        return ret
+        return ret;
     }());
     var iconLib = {
 
@@ -65,16 +68,16 @@ $(document).ready(function () {
     drawCards();
 
 
-    function drawCards(store) {
+    function drawCards(store,fn,data) {
 
-        var newStore = store;
+       console.log('data',data)
         var thisguy = new TinCan.Agent({
             mbox: "mailto:" + mail
         });
         lrs.queryStatements({
                 params: {
                     agent: thisguy,
-                    activity: "http://xapi_environment/associates",
+                    activity:"http://ipk.behr.com/web/associates",
                     since: "2018-01-05T08:34:16Z"
                 },
                 callback: function (err, sr) {
@@ -87,25 +90,100 @@ $(document).ready(function () {
                     if (sr.more !== null) {
                         // TODO: additional page(s) of statements should be fetched
                     }
-                    console.log(sr.statements[0]);
-                    if (typeof sr.statements[0] != 'undefined') {
-                        var store = sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"];
-                        if (typeof newStore != 'undefined') {
-                            cards.empty();
-                            store[newStore] = {
-                                "associate_1": {
-                                    "name": "appended dude"
-                                }
-                            };
-                            delete sr.statements[0].id;
-                            sr.statements[0].id = "51c7c013-46e0-4ed1-b01b-4294f99efd25";
-                            str = sr.statements[0];
-                            sendStatement(str);
+                    
+                    var st=sr.statements[0];
+                    var uriExt =  "http://ipk.behr.com/associates";
+                                 
+                    var ext=st.context.extensions[uriExt];
+                    var prepStmt= new TinCan.Statement( {
+                        "actor": {
+                         "name": st.actor.name,
+                         "mbox": st.actor.mbox
+                        },
+                       "verb": {
+                         "id": "http://activitystrea.ms/schema/1.0/update",
+                         "display": {
+                          "en-US": "updated" 
+                         }
+                        },
+                        "object": {
+                         "objectType": "Activity",
+                         "id": "http://ipk.behr.com/web/associates",
+                         "definition": {
+                          "name": {
+                           "en-US": "Associate Registration"
+                          }
+                         }
+                        },
+                        "context": {
+                         "contextActivities": {
+                          "parent": [
+                           {
+                            "id": "http://ipk.behr.com/web",
+                            "definition": {
+                             "name": {
+                              "en-US": "iPK Web Environment"
+                             }
+                            }
+                           }
+                          ]
+                         },
+                         "platform": navigator.platform,
+                         "extensions": {
+                          "http://ipk.behr.com/associates": ext
+                         },
+                         "language": "en-US"
+                        }
+                    });
+                       
 
+                
+                
+                    if (typeof st != 'undefined') {
+                     
+                        if (typeof store != 'undefined') {
+                            cards.empty();
+                        }
+                        if (fn ==='addStore'){
+
+
+                       //prepStmt.context.extensions[uriExt][store]={};
+                     
+                        prepStmt.context.extensions[uriExt][store]={}
+                        updateStatement(prepStmt);
+                          
+                          
                         }
 
+                        if (fn ==='deleteStore'){
 
-                        var storeNumbers = (Object.keys(sr.statements[0].context.extensions["http://wwww.brianfloyd.me/associates"]));
+                            delete  prepStmt.context.extensions[uriExt][store];
+                            updateStatement(prepStmt);
+
+                        }
+                        if (fn ==="addAssociate"){
+
+                            
+                            var i = function(){
+                               var ret = st.context.extensions[uriExt][store];
+                    
+                               return Object.keys.length+1
+                            }
+                            var assoc ="associate_"+i();
+                          
+            
+                            prepStmt.context.extensions[uriExt][store][assoc]=data;
+                            updateStatement(prepStmt);
+                                                 }
+                           
+                        
+                        console.log(st);
+                        console.log(prepStmt);
+                       
+                    }
+
+
+                        var storeNumbers = (Object.keys(st.context.extensions[uriExt]));
                         var cardsToDraw = Object.keys(storeNumbers).length;
 
                         //create cards with store number header based on json 
@@ -116,19 +194,16 @@ $(document).ready(function () {
                         }
                         //create the associates that belong to store number header
                         for (a = 0; a < storeNumbers.length; a++) {
-                            var numAssoc = (Object.keys(store[storeNumbers[a]]).length);
+                            var numAssoc = (Object.keys(ext[storeNumbers[a]]).length);
                             for (var z = 1; z < numAssoc + 1; z++) {
-                                $('<button class="associate">' + store[storeNumbers[a]]['associate_' + z].name + '</div>')
+                                $('<button class="associate">' + ext[storeNumbers[a]]['associate_' + z].name + '</div>')
                                     .appendTo($('.card_' + storeNumbers[a]));
                             }
                         }
                         drawNewStoreCard(storeNumbers);
-                    } else {
-                        drawNewStoreCard();
-                    }
+                    
                 }
-            }
-        );
+            })
     }
 
     function drawNewStoreCard(str) {
@@ -155,7 +230,8 @@ $(document).ready(function () {
                     if (!match) {
 
                         $('.card.new_store').removeClass('new_store').addClass('card_' + store);
-                        drawCards(store);
+                      
+                        drawCards(store,'addStore');
 
                     }
                 }
@@ -200,14 +276,13 @@ $(document).ready(function () {
     //event listener for any menu item
     $('body').on("click", "button", function () {
         //lastcss is a global that is assingned from the previous click if it exists remove the highlight
-        console.log(lastcss)
         if (typeof lastcss != 'undefined') {
             lastcss.removeAttr('style');
         }
         var el = $(this);
         lastcss = el;
         var className = (el[0].classList[0]);
-        var parentName = '.' + el[0].parentElement.classList[1]
+        var parentName = '.' + el[0].parentElement.classList[1];
         //turn menu items grey tuen associates red
         if (className === 'associate' && removeFlag) {
             if (parentName === gearName) {
@@ -230,7 +305,7 @@ $(document).ready(function () {
 
             case menuText.one:
              
-                    deleteStore(b[1]);
+                    deleteStore(card,b[1]);
                  
                 break;
 
@@ -249,7 +324,7 @@ $(document).ready(function () {
                 var msg = "Choose associate to remove";
                 removeFlag = true;
                 setTimeout(function () {
-                    $('<div class ="msg">' + msg + '</div>').appendTo(card)
+                    $('<div class ="msg">' + msg + '</div>').appendTo(card);
                 }, 750);
         }
     });
@@ -283,10 +358,10 @@ $(document).ready(function () {
                     if (e.which === 13) {
                         var addon = $(this).val();
                         console.log(addon);
-                        var starter = sr.statements[0][addon];
+                        var starter = st[addon];
 
                         console.log(starter);
-                        console.log(Object.keys(sr.statements[0]));
+                        console.log(Object.keys(st));
                     }
 
 
@@ -307,32 +382,47 @@ $(document).ready(function () {
         return name1[1];
     }
 
-    function deleteStore(storeNumber) {
+    function deleteStore(card, storeNumber) {
+
         var con = confirm("Are you sure you want to remove this store and all it's associates?");
         if (con) {
-        card.remove();
+      drawCards(storeNumber,'deleteStore');
         console.log('Delete ' + storeNumber);
         }
     }
 
     function addAssociate(card) {
 
-        var input = $('input.new-associate')
+       var a =(card[0].classList[1]);
+     
+       var b =a.split('_');
+       var store = b[1];
+     
+        var input = $('input.new-associate');
 
         input.on('keyup', function (e) {
 
             if (e.which === 13) {
 
                 var newAss = $(this).val();
-                console.log(newAss)
+            
                 $('<input class ="add-associate-dept grey" placeholder ="dept">').appendTo(card).focus().on('keyup', function (e) {
 
                     if (e.which === 13) {
                         var newAssDept = $(this).val();
-                        console.log(newAssDept);
+                   
                         $(this).remove();
+                        var data = {
+                            "name" : newAss,
+                            "dept":newAssDept
+                        }
+                    
+                    
+                        drawCards(store, "addAssociate" , data)
+
                     }
-                })
+                
+                });
             }
         });
     }
@@ -375,7 +465,7 @@ $(document).ready(function () {
         });
     }
 
-    function sendStatement(statement) {
+    function updateStatement(statement) {
         lrs.saveStatement(
             statement, {
                 callback: function (err, xhr) {
@@ -458,10 +548,10 @@ $(document).ready(function () {
 //             if(e.which ===13){
 //               var addon =  $(this).val();
 //               console.log(addon)
-//               var starter =sr.statements[0][addon]
+//               var starter =st[addon]
 
 //               console.log(starter);
-//               console.log(Object.keys(sr.statements[0]))
+//               console.log(Object.keys(st))
 //             }
 
 
