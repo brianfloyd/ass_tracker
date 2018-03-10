@@ -70,7 +70,6 @@ $(document).ready(function () {
 
     function drawCards(store,fn,data) {
 
-       console.log('data',data)
         var thisguy = new TinCan.Agent({
             mbox: "mailto:" + mail
         });
@@ -167,14 +166,64 @@ $(document).ready(function () {
                             var i = function(){
                                var ret = st.context.extensions[uriExt][store];
                     
-                               return Object.keys.length+1
+                               return Object.keys(ret).length+1
                             }
+                          
                             var assoc ="associate_"+i();
                           
             
                             prepStmt.context.extensions[uriExt][store][assoc]=data;
                             updateStatement(prepStmt);
                                                  }
+
+                    if (fn ==='deleteAssociate'){
+
+                       var values = Object.values(st.context.extensions[uriExt][store]);
+                       var iterate = Object.keys(st.context.extensions[uriExt][store]).length;
+
+                       for (var m =0;m<iterate;m++){
+
+                    
+                        if (values[m].name===data){
+
+                            m++;
+
+                            delete st.context.extensions[uriExt][store]['associate_'+m]
+
+                            values = Object.values(st.context.extensions[uriExt][store]);
+                            iterate = Object.keys(st.context.extensions[uriExt][store]).length;
+                            var update = {}
+                            for (m =0;m<iterate;m++){
+
+                                values[m];
+                                updateAss = 'associate_'+(m+1);
+
+                               
+                                update[updateAss]=values[m];
+                                
+
+
+
+
+                            }
+                             prepStmt.context.extensions[uriExt][store]=update;
+                            
+                             updateStatement(prepStmt);
+                        }
+
+
+
+
+
+                       }
+
+
+                    }
+                      
+                        
+
+
+                    
                            
                         
                         console.log(st);
@@ -196,6 +245,8 @@ $(document).ready(function () {
                         for (a = 0; a < storeNumbers.length; a++) {
                             var numAssoc = (Object.keys(ext[storeNumbers[a]]).length);
                             for (var z = 1; z < numAssoc + 1; z++) {
+
+                                
                                 $('<button class="associate">' + ext[storeNumbers[a]]['associate_' + z].name + '</div>')
                                     .appendTo($('.card_' + storeNumbers[a]));
                             }
@@ -432,14 +483,18 @@ $(document).ready(function () {
             "background": "red",
             "color": "white"
         });
-        var name = el.text();
-        var con = confirm('Please confirm that you would like to remove ' + name + ' from the list');
+        var data = el.text();
+        var a =el[0].parentElement.classList[1];
+        var b =a.split('_');
+        var store = b[1];
+        var con = confirm('Please confirm that you would like to remove ' + data + ' from the list');
 
         if (con) {
-            el.remove();
+            console.log(store);
+            drawCards(store,'deleteAssociate',data)
             console.log('remove', name);
             removeFlag = false;
-            $('.msg').remove();
+           
 
         } else {
             el.css({
