@@ -50,8 +50,8 @@ html {
 input.add{
 	font-size: calc( 20px + ( 16 - 14) * ( ( 100vw - 300px) / ( 1400 - 300)));
 	color:#fff;
-	width:30vw;
-	height:6vh;
+	width:100%;
+	
 }
 
 input::placeholder{
@@ -71,7 +71,6 @@ img.plus{
 	position:absolute;
 	left:50%;
 	bottom:15%;
-
 	transform:translate(-50%,-50%);
 }
 
@@ -79,7 +78,7 @@ button.associate, input.new-associate,input.add-associate-dept{
 
 	background-color:none;
 	border:none;
-	width:30vw;
+width:100%;
 	display:block;
 	font-size:25px;
 	padding-top:1%;
@@ -99,7 +98,7 @@ img.gear{
 	
 	background-color:rgb(54, 162, 250);
 	height:1vh;
-	width:30vw;
+	width:100%;
 	position:absolute;
 	bottom:0;
 	border-bottom-right-radius: 10px;
@@ -128,7 +127,6 @@ button.menu-item{
 	background-color:rgb(54, 162, 250);
 	color:white;
 	border:none;
-	width:30vw;
 	display:block;
 	font-size: calc( 18px + ( 16 - 14) * ( ( 100vw - 300px) / ( 1400 - 300)));
 	padding-top:1%;
@@ -161,9 +159,6 @@ input.add-associate-dept{
 
 width:4vw;
 
-
-
-
 }
 input.new-associate{
 	display:inline-block !important;
@@ -178,5 +173,26 @@ select{
 
 }
 
+
+@media screen and (max-width: 375px) {
+	
+	.card{
+
+
+		content:"";
+		clear:both;
+		display:table;
+		width:94vw;
+	}
+	button.menu-item{
+
+	
+
+
+	}
+
+
+	}
+  
 
 

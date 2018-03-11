@@ -143,18 +143,12 @@ $(document).ready(function () {
                         cards.empty();
                     }
                     if (fn === 'addStore') {
-
-
-                        //prepStmt.context.extensions[uriExt][store]={};
-
-                        prepStmt.context.extensions[uriExt][store] = {}
+                        prepStmt.context.extensions[uriExt][store] = {};
                         updateStatement(prepStmt);
-
-
                     }
 
                     if (fn === 'deleteStore') {
-                        a
+                        
 
                         delete prepStmt.context.extensions[uriExt][store];
                         updateStatement(prepStmt);
@@ -166,8 +160,8 @@ $(document).ready(function () {
                         var i = function () {
                             var ret = st.context.extensions[uriExt][store];
 
-                            return Object.keys(ret).length + 1
-                        }
+                            return Object.keys(ret).length + 1;
+                        };
 
                         var assoc = "associate_" + i();
 
@@ -188,46 +182,24 @@ $(document).ready(function () {
 
                                 m++;
 
-                                delete st.context.extensions[uriExt][store]['associate_' + m]
+                                delete st.context.extensions[uriExt][store]['associate_' + m];
 
                                 values = Object.values(st.context.extensions[uriExt][store]);
                                 iterate = Object.keys(st.context.extensions[uriExt][store]).length;
-                                var update = {}
+                                var update = {};
                                 for (m = 0; m < iterate; m++) {
 
-                                    values[m];
+                                 
                                     updateAss = 'associate_' + (m + 1);
-
-
                                     update[updateAss] = values[m];
-
-
-
-
 
                                 }
                                 prepStmt.context.extensions[uriExt][store] = update;
 
                                 updateStatement(prepStmt);
                             }
-
-
-
-
-
                         }
-
-
                     }
-
-
-
-
-
-
-
-
-
                 }
 
 
@@ -235,7 +207,7 @@ $(document).ready(function () {
                 var cardsToDraw = Object.keys(storeNumbers).length;
 
                 //create cards with store number header based on json 
-                for (i = 0; i < cardsToDraw; i++) {
+                for (var i = 0; i < cardsToDraw; i++) {
                     $('<div class="card ' + 'card_' + storeNumbers[i] + '"' + '>').appendTo(cards);
                     $('<div class="store">' + storeNumbers[i] + '</div>').appendTo($('.card_' + storeNumbers[i]));
                     $(iconLib.gear).appendTo($('.card_' + storeNumbers[i]));
@@ -253,7 +225,7 @@ $(document).ready(function () {
                 drawNewStoreCard(storeNumbers);
 
             }
-        })
+        });
     }
 
     function drawNewStoreCard(str) {
@@ -454,37 +426,31 @@ $(document).ready(function () {
 
             if (e.which === 13) {
 
-
-
-
-
-
                 var newAss = $(this).val();
+                console.log(newAss);
                 var a = newAss.split(' ');
 
-
                 if (newAss.length > 20) {
-                    $(this).val('');
+                    $(this).val('').focus();
                     $(this).attr('placeholder', 'Please enter a name less than 20 chars');
 
                 }
 
-                if (!/^[a-zA-Z]+$/.test(newAss)) {
-                    $(this).val('');
-                    $(this).attr('placeholder', 'Only alpha chars accepted, try again');
+                // if (!/^[a-zA-Z]+$/.test(newAss)) {
+                 
+                //     $(this).attr('placeholder', 'Only alpha chars accepted, try again');
+                //     $(this).val('').focus();
+                   
+                // }
 
-                }
-
-                if (a != 2) {
-                    $(this).val('');
+                if (a.length != 2) {
+                    $(this).val('').focus();
                     $(this).attr('placeholder', 'You aint Prince, first and last name please');
-
-
 
                 } else {
 
 
-                    $('<select class ="add-associate-dept grey" >').appendTo(card)
+                    $('<select class ="add-associate-dept grey" >').appendTo(card).focus();
                     $.each(deptOptions, function (key, value) {
 
                         $("select")
@@ -502,13 +468,13 @@ $(document).ready(function () {
                         var data = {
                             "name": newAss,
                             "dept": newAssDept
-                        }
+                        };
 
-                        $('select').remove()
-                        drawCards(store, "addAssociate", data)
+                        $('select').remove();
+                        drawCards(store, "addAssociate", data);
 
-                    })
-
+                    });
+                
 
                 }
             }
@@ -528,7 +494,7 @@ $(document).ready(function () {
 
         if (con) {
 
-            drawCards(store, 'deleteAssociate', data)
+            drawCards(store, 'deleteAssociate', data);
 
             removeFlag = false;
 

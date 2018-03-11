@@ -1,0 +1,13 @@
+@media screen and (max-width: 375px) {
+	
+	.card,.add{
+
+
+		content:"";
+		clear:both;
+		display:table;
+		width:94vw;
+	}
+
+
+	}
