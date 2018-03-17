@@ -9,5 +9,31 @@
 		width:94vw;
 	}
 
+	
+
+
+
+
+	}
+
+	@media screen and (max-width: 1024px) {
+
+
+		select{
+
+			width:20vw;
+		}
+
+		.card .msg {
+
+		left:17%;
+
+
+		}
+
+		.menu-item{
+			font-size:30px;
+		}
+
 
 	}

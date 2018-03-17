@@ -128,7 +128,7 @@ button.menu-item{
 	color:white;
 	border:none;
 	display:block;
-	font-size: calc( 18px + ( 16 - 14) * ( ( 100vw - 300px) / ( 1400 - 300)));
+	font-size: calc( 24px + ( 16 - 14) * ( ( 100vw - 300px) / ( 1400 - 300)));
 	padding-top:1%;
 	text-align:left;
 	font-weight:100;
@@ -174,25 +174,7 @@ select{
 }
 
 
-@media screen and (max-width: 375px) {
-	
-	.card{
 
-
-		content:"";
-		clear:both;
-		display:table;
-		width:94vw;
-	}
-	button.menu-item{
-
-	
-
-
-	}
-
-
-	}
   
 
 

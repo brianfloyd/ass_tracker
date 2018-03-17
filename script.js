@@ -38,10 +38,14 @@ $(document).ready(function () {
     var output = $('.output');
     var cards = $('.cards');
     var $id = '22f611aa-b012-44db-bf38-3e5d7a97d574';
-    var prodmail = userDetails();
-    var mail = "brian@brianfloyd.me";
+    var prodmail = userDetails()[0];
+    var uriExt = "http://ipk.behr.com/associates";
+
+
+    var mail = prodmail;
     var removeFlag = false; //toggles whether associates are selectable in body event listener
     var gearName; //Universal scoped variable to use body event handler
+    var enterFlag = 0;
 
 
 
@@ -74,6 +78,7 @@ $(document).ready(function () {
         var thisguy = new TinCan.Agent({
             mbox: "mailto:" + mail
         });
+       
         lrs.queryStatements({
             params: {
                 agent: thisguy,
@@ -91,15 +96,31 @@ $(document).ready(function () {
                     // TODO: additional page(s) of statements should be fetched
                 }
 
+            
+                if (typeof sr.statements[0] !='undefined'){
                 var st = sr.statements[0];
-                var uriExt = "http://ipk.behr.com/associates";
+                
 
                 var ext = st.context.extensions[uriExt];
+            
+            var actor =   {
+                    "name": st.actor.name,
+                    "mbox": st.actor.mbox
+                }
+            
+            
+            
+            }else{
+                var actor =  {
+                    "name": userDetails()[1],
+                    "mbox": "mailto:"+mail
+                };
+                var ext ={}
+              
+            }
+         
                 var prepStmt = new TinCan.Statement({
-                    "actor": {
-                        "name": st.actor.name,
-                        "mbox": st.actor.mbox
-                    },
+                    "actor": actor,
                     "verb": {
                         "id": "http://activitystrea.ms/schema/1.0/update",
                         "display": {
@@ -134,15 +155,11 @@ $(document).ready(function () {
                     }
                 });
 
-
-
-
-                if (typeof st != 'undefined') {
-
                     if (typeof store != 'undefined') {
                         cards.empty();
                     }
                     if (fn === 'addStore') {
+                     
                         prepStmt.context.extensions[uriExt][store] = {};
                         updateStatement(prepStmt);
                     }
@@ -200,11 +217,13 @@ $(document).ready(function () {
                             }
                         }
                     }
-                }
+                
 
-
+                if (typeof st !='undefined'){
                 var storeNumbers = (Object.keys(st.context.extensions[uriExt]));
                 var cardsToDraw = Object.keys(storeNumbers).length;
+                
+
 
                 //create cards with store number header based on json 
                 for (var i = 0; i < cardsToDraw; i++) {
@@ -222,6 +241,7 @@ $(document).ready(function () {
                             .appendTo($('.card_' + storeNumbers[a]));
                     }
                 }
+            }
                 drawNewStoreCard(storeNumbers);
 
             }
@@ -237,7 +257,7 @@ $(document).ready(function () {
         $(iconLib.plus).appendTo('.new_store');
         $('img.plus').on("click", function () {
             $(this).hide();
-            $('.add').removeAttr('disabled').focus().removeAttr('placeholder').on('keyup', function (e) {
+            $('.add').removeAttr('disabled').focus().removeAttr('placeholder').on('keypress', function (e) {
                 if (e.which === 13) {
 
                     var store = ($('.add').val());
@@ -371,19 +391,11 @@ $(document).ready(function () {
                     // TODO: additional page(s) of statements should be fetched
                 }
 
-
-
-                console.log(sr.statements);
-
-                $('.input-text').on('keyup', function (e) {
+                $('.input-text').on('keypress', function (e) {
 
                     if (e.which === 13) {
                         var addon = $(this).val();
-                        console.log(addon);
                         var starter = st[addon];
-
-                        console.log(starter);
-                        console.log(Object.keys(st));
                     }
 
 
@@ -401,7 +413,11 @@ $(document).ready(function () {
         var name2 = name1[1].split('@');
         //var name1 = name.split(",");
         output.text('User: ' + name2[0]);
-        return name1[1];
+     
+        var userinfo =[ name1[1] , name2[0]];
+      
+     
+       return userinfo
     }
 
     function deleteStore(card, storeNumber) {
@@ -409,7 +425,7 @@ $(document).ready(function () {
         var con = confirm("Are you sure you want to remove this store and all it's associates?");
         if (con) {
             drawCards(storeNumber, 'deleteStore');
-            console.log('Delete ' + storeNumber);
+           
         }
     }
 
@@ -422,54 +438,72 @@ $(document).ready(function () {
 
         var input = $('input.new-associate');
 
-        input.on('keyup', function (e) {
+        input.on('keypress', function (e) {
 
             if (e.which === 13) {
 
                 var newAss = $(this).val();
-                console.log(newAss);
+              
                 var a = newAss.split(' ');
+                enterFlag++;
+            
 
-                if (newAss.length > 20) {
+                if (enterFlag > 1){ $('select').focus()
+               
+            
+            
+            }
+
+                else if (newAss.length > 20) {
                     $(this).val('').focus();
                     $(this).attr('placeholder', 'Please enter a name less than 20 chars');
 
                 }
 
-                // if (!/^[a-zA-Z]+$/.test(newAss)) {
+                else if (!/^[A-z_ ]+$/.test(newAss)) {
                  
-                //     $(this).attr('placeholder', 'Only alpha chars accepted, try again');
-                //     $(this).val('').focus();
+                    $(this).attr('placeholder', 'Only alpha chars accepted, try again');
+                    $(this).val('').focus();
                    
-                // }
+                }
 
-                if (a.length != 2) {
+                else if (a.length < 2) {
                     $(this).val('').focus();
                     $(this).attr('placeholder', 'You aint Prince, first and last name please');
 
-                } else {
+                }
+                else if (a.length >2 ) {
+                    $(this).val('').focus();
+                    $(this).attr('placeholder', 'First and Last name only please');
 
+                }
+                
+                
+                else {
 
-                    $('<select class ="add-associate-dept grey" >').appendTo(card).focus();
+                  
+                    $('<select class ="add-associate-dept grey" >').appendTo(card)
                     $.each(deptOptions, function (key, value) {
 
                         $("select")
                             .append(
-                                $("<option></optiom>")
+                                $("<option></option>")
                                 .attr("value", key)
                                 .text(value)
+                                
                             );
                     });
-
+                    $('select').focus();
+                    
                     $('select').on('change', function () {
                         var newAssDept = $('select option:selected').text();
 
 
                         var data = {
-                            "name": newAss,
+                            "name": newAss.toUpperCase(),
                             "dept": newAssDept
                         };
-
+                        enterFlag = 0;
                         $('select').remove();
                         drawCards(store, "addAssociate", data);
 
